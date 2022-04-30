@@ -41,7 +41,7 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       // 如果不是内置组件的处理逻辑
-      vm.$options = mergeOptions( 
+      vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor), // 构造函数Vue
         options || {}, // 传递过来的选项对象
         vm // 当前Vue实例

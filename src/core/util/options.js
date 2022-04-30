@@ -315,25 +315,31 @@ function normalizeProps (options: Object, vm: ?Component) {
       vm
     )
   }
-  // 然后将处理好的props 重新赋值 res
+  // 然后将处理好的props 重新赋值 res 
+  // props 的处理工作就完成了
   options.props = res
 }
 
 /**
  * Normalize all injections into Object-based format
  */
+// 处理组件的  inject
 function normalizeInject (options: Object, vm: ?Component) {
   const inject = options.inject
   if (!inject) return
   const normalized = options.inject = {}
   if (Array.isArray(inject)) {
     for (let i = 0; i < inject.length; i++) {
+      // 就是添加了一个 from 字段
+      // i do not understant  that
       normalized[inject[i]] = { from: inject[i] }
     }
+    // 对象的处理方式和数组基本类似 就是添加了一个from 字段  但如果是对象的话   手动添加
   } else if (isPlainObject(inject)) {
     for (const key in inject) {
       const val = inject[key]
       normalized[key] = isPlainObject(val)
+        // 就是对象的key拷贝
         ? extend({ from: key }, val)
         : { from: val }
     }
@@ -390,8 +396,8 @@ export function mergeOptions (
     child = child.options
   }
 
-  normalizeProps(child, vm)
-  normalizeInject(child, vm)
+  normalizeProps(child, vm) // 主要就是将我们传递过来的props 做统一的处理 因为有时候我们谁传递数组和对象的情况
+  normalizeInject(child, vm) // 主要就是处理传递过来的inject 方式和props 基本一样  只是添加了一个 from 的键
   normalizeDirectives(child)
   const extendsFrom = child.extends
   if (extendsFrom) {
