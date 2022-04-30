@@ -5,12 +5,21 @@ import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
+// 这里才是镇定定义Vue的地方
 function Vue (options) {
+  // 判断  如果当前执行环境不是生产环境 并且 this 的构造函数的并不是Vue 则抛出一个一场
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)
   ) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
+  // 初始化的 我们传递过来的参数
+  /**
+   {
+    ...
+   }
+   */
+  // 调用this._init 方法 添加位置  unknow
   this._init(options)
 }
 
