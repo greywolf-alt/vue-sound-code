@@ -10,6 +10,7 @@ import { initLifecycle, callHook } from './lifecycle'
 import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
+// uid  是Vue组建的id  是唯一的并且是递增的 
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
@@ -23,22 +24,27 @@ export function initMixin (Vue: Class<Component>) {
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
+      // i do not really understand
+      // 好像就是用来记录性能的
       mark(startTag)
     }
 
     // a flag to avoid this being observed
+    // 当前组建的是Vue 实例
     vm._isVue = true
-    // merge options
+    // merge options  判断是否是内置的组件
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      // 内置组件需要特殊对待
       initInternalComponent(vm, options)
     } else {
-      vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
-        options || {},
-        vm
+      // 如果不是内置组件的处理逻辑
+      vm.$options = mergeOptions( 
+        resolveConstructorOptions(vm.constructor), // 构造函数Vue
+        options || {}, // 传递过来的选项对象
+        vm // 当前Vue实例
       )
     }
     /* istanbul ignore else */
@@ -71,6 +77,7 @@ export function initMixin (Vue: Class<Component>) {
   }
 }
 
+// 对于内置组建的出路  --noLook
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
@@ -92,6 +99,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+//  mergeObject 时候调用的函数  (传递一个Vue 构造函数) --noLook
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {

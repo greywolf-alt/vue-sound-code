@@ -19,10 +19,12 @@ function Vue (options) {
     ...
    }
    */
-  // 调用this._init 方法 添加位置  unknow
+  // Vue.prototype._init 方法是实在 initMixin 的时候添加的
   this._init(options)
 }
-
+/**
+ * 
+ */
 initMixin(Vue)
 stateMixin(Vue)
 eventsMixin(Vue)
