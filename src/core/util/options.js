@@ -246,13 +246,15 @@ const defaultStrat = function (parentVal: any, childVal: any): any {
 /**
  * Validate component names
  */
+// 这部分主要是对组件的名字进行验证
 function checkComponents (options: Object) {
   for (const key in options.components) {
     validateComponentName(key)
   }
 }
-
+// 验证组建的名称
 export function validateComponentName (name: string) {
+  // 如果是不是字母开头 就报错
   if (!/^[a-zA-Z][\w-]*$/.test(name)) {
     warn(
       'Invalid component name: "' + name + '". Component names ' +
@@ -260,6 +262,8 @@ export function validateComponentName (name: string) {
       'and must start with a letter.'
     )
   }
+  //  isbuiltInTag-判断是不是内置组件
+  // config.isreservedtag 需要传递一个参数, ts 验证必须是字符串 返回一个布尔值
   if (isBuiltInTag(name) || config.isReservedTag(name)) {
     warn(
       'Do not use built-in or reserved HTML elements as component ' +
@@ -272,26 +276,34 @@ export function validateComponentName (name: string) {
  * Ensure all props option syntax are normalized into the
  * Object-based format.
  */
+// 主要就是用来标准化 prop 因为我们在传递 prop 的时候 可能是一个数组,可能是一个对象
 function normalizeProps (options: Object, vm: ?Component) {
   const props = options.props
   if (!props) return
   const res = {}
   let i, val, name
+  // 对于 prop 是一个数组的处理
   if (Array.isArray(props)) {
     i = props.length
+    // 遍历我们传递的prop 的每一个成员
     while (i--) {
       val = props[i]
+      // 传递过来的prop 成员必须是 字符串
       if (typeof val === 'string') {
         name = camelize(val)
+        // 将 props 的每一个成员的 type 设置成null
         res[name] = { type: null }
       } else if (process.env.NODE_ENV !== 'production') {
         warn('props must be strings when using array syntax.')
       }
     }
+    // isplainObject 就是判断是不是一个对象 [object Object]
   } else if (isPlainObject(props)) {
     for (const key in props) {
       val = props[key]
       name = camelize(key)
+      // 就是判断 类型为Object的props  的该成员  如果是对象 那么久返回该成员 
+      //  如果不是 那么就将该成员的 type 设置成 val, 因为这时候我们可能会传递一个构造函数 { name:String  } 
       res[name] = isPlainObject(val)
         ? val
         : { type: val }
@@ -303,6 +315,7 @@ function normalizeProps (options: Object, vm: ?Component) {
       vm
     )
   }
+  // 然后将处理好的props 重新赋值 res
   options.props = res
 }
 
@@ -369,6 +382,7 @@ export function mergeOptions (
   vm?: Component
 ): Object {
   if (process.env.NODE_ENV !== 'production') {
+    // 主要就是用来验证组建的名称是不是可用的
     checkComponents(child)
   }
 

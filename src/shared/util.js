@@ -55,6 +55,7 @@ export function toRawType (value: any): string {
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  */
+// 判断是不是一个obj
 export function isPlainObject (obj: any): boolean {
   return _toString.call(obj) === '[object Object]'
 }
@@ -95,6 +96,7 @@ export function toNumber (val: string): number | string {
  * Make a map and return a function for checking if a key
  * is in that map.
  */
+// 返回一个函数 将传递过来的字符串使用 ,切割, 用来判断传递过来的是否包含对应字符串
 export function makeMap (
   str: string,
   expectsLowerCase?: boolean
@@ -112,6 +114,7 @@ export function makeMap (
 /**
  * Check if a tag is a built-in tag.
  */
+// 主要就是定义  内置组件 如果是的话 就返回true tip: 在初始化组建的时候判断
 export const isBuiltInTag = makeMap('slot,component', true)
 
 /**
@@ -154,7 +157,9 @@ export function cached<F: Function> (fn: F): F {
  * Camelize a hyphen-delimited string.
  */
 const camelizeRE = /-(\w)/g
+// 
 export const camelize = cached((str: string): string => {
+  // 驼峰  i do not really understand this method
   return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
 })
 

@@ -1,0 +1,64 @@
+warning: LF will be replaced by CRLF in src/core/config.js.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/core/util/options.js.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/shared/util.js.
+The file will have its original line endings in your working directory
+[1mdiff --git a/src/core/util/options.js b/src/core/util/options.js[m
+[1mindex a070548..4c5febd 100644[m
+[1m--- a/src/core/util/options.js[m
+[1m+++ b/src/core/util/options.js[m
+[36m@@ -246,13 +246,15 @@[m [mconst defaultStrat = function (parentVal: any, childVal: any): any {[m
+ /**[m
+  * Validate component names[m
+  */[m
+[32m+[m[32m// 这部分主要是对组件的名字进行验证[m
+ function checkComponents (options: Object) {[m
+   for (const key in options.components) {[m
+     validateComponentName(key)[m
+   }[m
+ }[m
+[31m-[m
+[32m+[m[32m// 验证组建的名称[m
+ export function validateComponentName (name: string) {[m
+[32m+[m[32m  // 如果是不是字母开头 就报错[m
+   if (!/^[a-zA-Z][\w-]*$/.test(name)) {[m
+     warn([m
+       'Invalid component name: "' + name + '". Component names ' +[m
+[36m@@ -260,6 +262,8 @@[m [mexport function validateComponentName (name: string) {[m
+       'and must start with a letter.'[m
+     )[m
+   }[m
+[32m+[m[32m  //  isbuiltInTag-判断是不是内置组件[m
+[32m+[m[32m  // config.isreservedtag 需要传递一个参数, ts 验证必须是字符串 返回一个布尔值[m
+   if (isBuiltInTag(name) || config.isReservedTag(name)) {[m
+     warn([m
+       'Do not use built-in or reserved HTML elements as component ' +[m
+[36m@@ -369,6 +373,7 @@[m [mexport function mergeOptions ([m
+   vm?: Component[m
+ ): Object {[m
+   if (process.env.NODE_ENV !== 'production') {[m
+[32m+[m[32m    // 主要就是用来验证组建的名称是不是可用的[m
+     checkComponents(child)[m
+   }[m
+ [m
+[1mdiff --git a/src/shared/util.js b/src/shared/util.js[m
+[1mindex e488473..c07482e 100644[m
+[1m--- a/src/shared/util.js[m
+[1m+++ b/src/shared/util.js[m
+[36m@@ -95,6 +95,7 @@[m [mexport function toNumber (val: string): number | string {[m
+  * Make a map and return a function for checking if a key[m
+  * is in that map.[m
+  */[m
+[32m+[m[32m// 返回一个函数 将传递过来的字符串使用 ,切割, 用来判断传递过来的是否包含对应字符串[m
+ export function makeMap ([m
+   str: string,[m
+   expectsLowerCase?: boolean[m
+[36m@@ -112,6 +113,7 @@[m [mexport function makeMap ([m
+ /**[m
+  * Check if a tag is a built-in tag.[m
+  */[m
+[32m+[m[32m// 主要就是定义  内置组件 如果是的话 就返回true tip: 在初始化组建的时候判断[m
+ export const isBuiltInTag = makeMap('slot,component', true)[m
+ [m
+ /**[m
