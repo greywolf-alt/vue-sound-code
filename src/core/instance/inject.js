@@ -42,13 +42,16 @@ export function resolveInject (inject: any, vm: Component): ?Object {
     const result = Object.create(null)
     const keys = hasSymbol
       ? Reflect.ownKeys(inject).filter(key => {
+        // 将可 遍历的键 过滤出来
         /* istanbul ignore next */
         return Object.getOwnPropertyDescriptor(inject, key).enumerable
       })
+      // 否则的话 就将所有的键取出来
       : Object.keys(inject)
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
+      // inject[key].from  这个from 是再init 的时候添加的
       const provideKey = inject[key].from
       let source = vm
       while (source) {

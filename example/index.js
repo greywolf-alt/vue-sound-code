@@ -930,6 +930,7 @@
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+    console.log('value', value)
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
@@ -1529,7 +1530,6 @@
     child,
     vm
   ) {
-    console.log('parent', parent)
     {
       checkComponents(child)
     }
@@ -3533,7 +3533,6 @@
 
     /* istanbul ignore else */
     {
-      console.log('parentData', parentData)
       defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
         !isUpdatingChildComponent && warn("$attrs is readonly.", vm)
       }, true)
@@ -5007,7 +5006,6 @@
           options || {},
           vm
         )
-        console.log('vm.$options', vm.$options)
       }
       /* istanbul ignore else */
       {
