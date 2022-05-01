@@ -13,7 +13,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 // uid  是Vue组建的id  是唯一的并且是递增的 
 let uid = 0
 
-export function initMixin (Vue: Class<Component>) {
+export function initMixin(Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -50,14 +50,15 @@ export function initMixin (Vue: Class<Component>) {
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
+      // 只是对 vm 的 get 或者 has 进行了代理  其他的使用默认行为  意义.....
       initProxy(vm)
     } else {
       vm._renderProxy = vm
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
+    initLifecycle(vm) // 初始化了一些属性
+    initEvents(vm) // 初始化时间
     initRender(vm)
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
@@ -79,7 +80,7 @@ export function initMixin (Vue: Class<Component>) {
 }
 
 // 对于内置组建的出路  --noLook
-export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
+export function initInternalComponent(vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
   const parentVnode = options._parentVnode
@@ -101,7 +102,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
 }
 
 //  mergeObject 时候调用的函数  (传递一个Vue 构造函数) --noLook
-export function resolveConstructorOptions (Ctor: Class<Component>) {
+export function resolveConstructorOptions(Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
@@ -125,7 +126,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
   return options
 }
 
-function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
+function resolveModifiedOptions(Ctor: Class<Component>): ?Object {
   let modified
   const latest = Ctor.options
   const extended = Ctor.extendOptions
@@ -139,7 +140,7 @@ function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
   return modified
 }
 
-function dedupe (latest, extended, sealed) {
+function dedupe(latest, extended, sealed) {
   // compare latest and sealed to ensure lifecycle hooks won't be duplicated
   // between merges
   if (Array.isArray(latest)) {

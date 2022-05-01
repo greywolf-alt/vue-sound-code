@@ -25,7 +25,7 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
-  let parent = options.parent
+  let parent = options.parent // 当前组建的父组件
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
@@ -34,7 +34,7 @@ export function initLifecycle (vm: Component) {
   }
 
   vm.$parent = parent
-  vm.$root = parent ? parent.$root : vm
+  vm.$root = parent ? parent.$root : vm  // 如果存在parent 就只想父组件的parent 否则的话就是 vm实例本身
 
   vm.$children = []
   vm.$refs = {}

@@ -140,18 +140,20 @@ export function defineReactive (
 ) {
   const dep = new Dep()
 
-  const property = Object.getOwnPropertyDescriptor(obj, key)
-  if (property && property.configurable === false) {
+  const property = Object.getOwnPropertyDescriptor(obj, key) //  获取 vm.$attr 的描述对象
+  if (property && property.configurable === false) { // 如果描述对象中的configurable == false 表示不可配置 那么就return
     return
   }
 
   // cater for pre-defined getter/setters
   const getter = property && property.get
+  //  如果描述对象的 getter 属性存在 <对象存取器>, 并且 没有传入val  参数 那么 val 就等于 vm.key
   if (!getter && arguments.length === 2) {
     val = obj[key]
   }
+  // 获取setter 描述对象
   const setter = property && property.set
-
+  // initRender 的时候 传入的 shallow === true
   let childOb = !shallow && observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,

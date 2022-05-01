@@ -3533,6 +3533,7 @@
 
     /* istanbul ignore else */
     {
+      console.log('parentData', parentData)
       defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
         !isUpdatingChildComponent && warn("$attrs is readonly.", vm)
       }, true)

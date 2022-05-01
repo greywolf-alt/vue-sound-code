@@ -18,22 +18,26 @@
           time: new Date()
         }
       },
-      template: `<span>{{time}}</span>`
+      template: `<span>{{time}}</span>`,
+      mounted() {
+        console.log('current-time', this)
+      },
     })
     var app = new Vue({
       el: '#app',
       template: `
       <div class="hello" @click="click">
-        <span>{{message}}</span>
+        <span>{{message}} <span v-if="count" >你点击了我{{count}}次</span> </span>
         <current-time></current-time>
       </div>
       `,
       data: {
-        message: 'Hello Vue!'
+        message: 'Hello Vue!',
+        count: 0,
       },
       methods: {
         click() {
-          this.message += '1'
+          this.count++
         }
       }
     })
