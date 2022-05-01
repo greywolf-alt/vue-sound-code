@@ -355,6 +355,7 @@ function normalizeInject (options: Object, vm: ?Component) {
 /**
  * Normalize raw function directives into object format.
  */
+// 主要就是对执行进行修改  如果传递的是一个函数 那么就转换成 { bind: def, update: def } 这种形式
 function normalizeDirectives (options: Object) {
   const dirs = options.directives
   if (dirs) {
@@ -398,11 +399,13 @@ export function mergeOptions (
 
   normalizeProps(child, vm) // 主要就是将我们传递过来的props 做统一的处理 因为有时候我们谁传递数组和对象的情况
   normalizeInject(child, vm) // 主要就是处理传递过来的inject 方式和props 基本一样  只是添加了一个 from 的键
-  normalizeDirectives(child)
+  normalizeDirectives(child) // 主要就是对执行进行修改  如果传递的是一个函数 那么就转换成 { bind: def, update: def } 这种形式
   const extendsFrom = child.extends
+  // i do not really understands this code
   if (extendsFrom) {
     parent = mergeOptions(parent, extendsFrom, vm)
   }
+  // 如果存在mixin 就将合并mixin 
   if (child.mixins) {
     for (let i = 0, l = child.mixins.length; i < l; i++) {
       parent = mergeOptions(parent, child.mixins[i], vm)
