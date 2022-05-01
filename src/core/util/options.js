@@ -106,13 +106,15 @@ export function mergeDataOrFn (
     }
   }
 }
-
+//  处理 data 操作
 strats.data = function (
   parentVal: any,
   childVal: any,
   vm?: Component
 ): ?Function {
+  // 如果没有 vm 表示就不是跟实例
   if (!vm) {
+    // 如果不是根实例  并且 childVal 不是函数 那么就会return  一个错误 因为住了跟实例 其他的data选项只能是一个函数
     if (childVal && typeof childVal !== 'function') {
       process.env.NODE_ENV !== 'production' && warn(
         'The "data" option should be a function ' +
@@ -123,6 +125,7 @@ strats.data = function (
 
       return parentVal
     }
+    // 执行mergeDataOrFn操作
     return mergeDataOrFn(parentVal, childVal)
   }
 

@@ -1529,6 +1529,7 @@
     child,
     vm
   ) {
+    console.log('parent', parent)
     {
       checkComponents(child)
     }
@@ -1567,7 +1568,6 @@
       }
     }
     function mergeField(key) {
-      console.log('key', key)
       var strat = strats[key] || defaultStrat
       options[key] = strat(parent[key], child[key], vm, key)
     }
@@ -5006,6 +5006,7 @@
           options || {},
           vm
         )
+        console.log('vm.$options', vm.$options)
       }
       /* istanbul ignore else */
       {

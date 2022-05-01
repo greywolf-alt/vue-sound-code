@@ -6,13 +6,14 @@ import { warn, makeMap, isNative } from '../util/index'
 let initProxy
 
 if (process.env.NODE_ENV !== 'production') {
+  // 已经存在的全局变量 不能使用
   const allowedGlobals = makeMap(
     'Infinity,undefined,NaN,isFinite,isNaN,' +
     'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,' +
     'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,' +
     'require' // for Webpack/Browserify
   )
-
+  // 使用不存在的实例属性的时候触发
   const warnNonPresent = (target, key) => {
     warn(
       `Property or method "${key}" is not defined on the instance but ` +
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   if (hasProxy) {
     const isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact')
+    // 好像就是一个普通的代理?
     config.keyCodes = new Proxy(config.keyCodes, {
       set (target, key, value) {
         if (isBuiltInModifier(key)) {
@@ -45,6 +47,7 @@ if (process.env.NODE_ENV !== 'production') {
   const hasHandler = {
     has (target, key) {
       const has = key in target
+      // 如果存在全局变量 或者 变量名称的第一个字符是_开头 那么都是不允许的
       const isAllowed = allowedGlobals(key) || key.charAt(0) === '_'
       if (!has && !isAllowed) {
         warnNonPresent(target, key)
@@ -55,6 +58,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   const getHandler = {
     get (target, key) {
+      // 判断如果访问的key不存在 则报错
       if (typeof key === 'string' && !(key in target)) {
         warnNonPresent(target, key)
       }
@@ -69,6 +73,8 @@ if (process.env.NODE_ENV !== 'production') {
       const handlers = options.render && options.render._withStripped
         ? getHandler
         : hasHandler
+        // i do not understatnds that code
+        // 只是对 vm 的 get 或者 has 进行了代理  其他的使用默认行为  意义.....
       vm._renderProxy = new Proxy(vm, handlers)
     } else {
       vm._renderProxy = vm

@@ -41,6 +41,7 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       // 如果不是内置组件的处理逻辑
+      //  这一步主要是进行了一系列的数据初始化操作 处理了 props,reject,redirect 数据的处理
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor), // 构造函数Vue
         options || {}, // 传递过来的选项对象
