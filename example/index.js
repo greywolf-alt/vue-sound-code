@@ -2472,7 +2472,6 @@
   function resolveInject(inject, vm) {
     if (inject) {
       console.log('inject', inject)
-      console.log('vm', vm)
       // inject is :any because flow is not smart enough to figure out cached
       var result = Object.create(null)
       var keys = hasSymbol

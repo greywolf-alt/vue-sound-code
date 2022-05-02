@@ -4,7 +4,7 @@ import { hasOwn } from 'shared/util'
 import { warn, hasSymbol } from '../util/index'
 import { defineReactive, toggleObserving } from '../observer/index'
 
-export function initProvide (vm: Component) {
+export function initProvide(vm: Component) {
   const provide = vm.$options.provide
   if (provide) {
     vm._provided = typeof provide === 'function'
@@ -13,7 +13,7 @@ export function initProvide (vm: Component) {
   }
 }
 
-export function initInjections (vm: Component) {
+export function initInjections(vm: Component) {
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
     toggleObserving(false)
@@ -36,11 +36,13 @@ export function initInjections (vm: Component) {
   }
 }
 
-export function resolveInject (inject: any, vm: Component): ?Object {
+export function resolveInject(inject: any, vm: Component): ?Object {
   if (inject) {
     // inject is :any because flow is not smart enough to figure out cached
     const result = Object.create(null)
     const keys = hasSymbol
+      // Reflect.ownKeys  返回自身的一个key的数组 包含Symbol属性
+      //  Object.keys  返回自身的key数组 但是不包含 Symbol属性
       ? Reflect.ownKeys(inject).filter(key => {
         // 将可 遍历的键 过滤出来
         /* istanbul ignore next */
@@ -55,6 +57,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
       const provideKey = inject[key].from
       let source = vm
       while (source) {
+        // 去 vm 上查找属性 source._provided 就是我们传递过来的对象
         if (source._provided && hasOwn(source._provided, provideKey)) {
           result[key] = source._provided[provideKey]
           break
@@ -62,6 +65,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
         source = source.$parent
       }
       if (!source) {
+        // 这里就是默认值的处理
         if ('default' in inject[key]) {
           const provideDefault = inject[key].default
           result[key] = typeof provideDefault === 'function'
