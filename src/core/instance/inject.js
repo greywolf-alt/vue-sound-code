@@ -51,7 +51,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
-      // inject[key].from  这个from 是再init 的时候添加的
+      // inject[key].from  这个from 是再init 的时候添加的 其实就是数组里面的每一个成员
       const provideKey = inject[key].from
       let source = vm
       while (source) {

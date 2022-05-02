@@ -18,7 +18,8 @@
           time: new Date()
         }
       },
-      template: `<span>{{time}}</span>`,
+      inject: ['provideName'],
+      template: `<span>{{time}} <br/> provideName:{{provideName}}</span>`,
       mounted() {
         console.log('current-time', this)
       },
@@ -31,6 +32,9 @@
         <current-time></current-time>
       </div>
       `,
+      provide: {
+        provideName: 'zs'
+      },
       data: {
         message: 'Hello Vue!',
         count: 0,
