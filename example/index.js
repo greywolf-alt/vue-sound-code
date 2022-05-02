@@ -930,7 +930,6 @@
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
-    console.log('value', value)
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
@@ -2449,8 +2448,15 @@
   }
 
   function initInjections(vm) {
+    // 就是通过讲传递过来的 inject的值 遍历出来
     var result = resolveInject(vm.$options.inject, vm)
     if (result) {
+      /**
+       * export function toggleObserving(value: boolean) {
+       *    shouldObserve = value
+       *  }
+       *  就是对其进行了一次布尔赋值 不进行数据观察
+       */
       toggleObserving(false)
       Object.keys(result).forEach(function (key) {
         /* istanbul ignore else */
@@ -2465,17 +2471,20 @@
           })
         }
       })
+      // 设置true 之后的操作 依旧进行数据观察
       toggleObserving(true)
     }
   }
 
   function resolveInject(inject, vm) {
     if (inject) {
-      console.log('inject', inject)
       // inject is :any because flow is not smart enough to figure out cached
       var result = Object.create(null)
       var keys = hasSymbol
+        // Reflect.ownKeys  返回自身的一个key的数组 包含Symbol属性
+        //  Object.keys  返回自身的key数组 但是不包含 Symbol属性
         ? Reflect.ownKeys(inject)
+        // 否则的话 就将所有的键取出来
         : Object.keys(inject)
 
       for (var i = 0; i < keys.length; i++) {
@@ -4652,7 +4661,7 @@
     }
     Object.defineProperty(target, key, sharedPropertyDefinition)
   }
-
+  // 再 调用beforeCreate 钩子函数之后 
   function initState(vm) {
     vm._watchers = []
     var opts = vm.$options
@@ -4681,6 +4690,7 @@
       toggleObserving(false)
     }
     var loop = function (key) {
+      console.log(key)
       keys.push(key)
       var value = validateProp(key, propsOptions, propsData, vm)
       /* istanbul ignore else */
@@ -4712,7 +4722,7 @@
         proxy(vm, "_props", key)
       }
     }
-
+    console.log(propsOptions)
     for (var key in propsOptions) loop(key)
     toggleObserving(true)
   }

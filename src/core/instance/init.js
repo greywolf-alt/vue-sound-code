@@ -58,11 +58,12 @@ export function initMixin(Vue: Class<Component>) {
     // expose real self
     vm._self = vm
     initLifecycle(vm) // 初始化了一些属性
-    initEvents(vm) // 初始化时间
+    initEvents(vm) // 初始化事件
     initRender(vm)
     callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    // initInjections 就是处理 inject 的传值, 当vm._inject 
+    initInjections(vm) // resolve injections before data/props  
+    initState(vm) //  
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 

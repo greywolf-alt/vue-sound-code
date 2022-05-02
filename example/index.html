@@ -18,6 +18,7 @@
           time: new Date()
         }
       },
+      props: ['message'],
       inject: ['provideName'],
       template: `<span>{{time}} <br/> provideName:{{provideName}}</span>`,
       mounted() {
@@ -29,7 +30,7 @@
       template: `
       <div class="hello" @click="click">
         <span>{{message}} <span v-if="count" >你点击了我{{count}}次</span> </span>
-        <current-time></current-time>
+        <current-time :message="message" ></current-time>
       </div>
       `,
       provide: {

@@ -14,6 +14,7 @@ export function initProvide(vm: Component) {
 }
 
 export function initInjections(vm: Component) {
+  // 就是通过讲传递过来的 inject的值 遍历出来
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
     toggleObserving(false)
@@ -76,6 +77,7 @@ export function resolveInject(inject: any, vm: Component): ?Object {
         }
       }
     }
+    // 将最终 的result 返回
     return result
   }
 }
