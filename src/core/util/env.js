@@ -38,6 +38,8 @@ let _isServer
 export const isServerRendering = () => {
   if (_isServer === undefined) {
     /* istanbul ignore if */
+    // 不在浏览器环境并且不是weex环境 glo_bal !== 'undefined' 
+    // global 其他环境的顶级变量
     if (!inBrowser && !inWeex && typeof global !== 'undefined') {
       // detect presence of vue-server-renderer and avoid
       // Webpack shimming the process

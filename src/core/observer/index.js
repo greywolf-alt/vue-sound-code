@@ -48,7 +48,7 @@ export class Observer {
     if (Array.isArray(value)) {
       // hasProto 就是 判断 {} 是否有原型 __proto__
       const augment = hasProto
-      // protoaugment =>   target.__proto__ = src
+        // protoaugment =>   target.__proto__ = src
         ? protoAugment
         : copyAugment
       augment(value, arrayMethods, arrayKeys)
@@ -108,14 +108,19 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
+// 尝试去创建一个监听者 如果成功的话就返回这个监听者, 如果存在就返回这个已经存在的观察者
 export function observe(value: any, asRootData: ?boolean): Observer | void {
+  // 如果传入的值不是一个对象 或者 对象继承自虚拟dom 直接return
   if (!isObject(value) || value instanceof VNode) {
     return
   }
   let ob: Observer | void
+  // 如果这个value 有__ob__属性 并且 value.__ob 继承自 observer  那么就是已经存在了观察者
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
+    // shouldObserve 是一个全局观察者开关 true 则表示开启,false 表示关闭
+    // 开启观察者 并且不是服务端渲染, 并且value是一个数组或者普通的对象并且 可扩展 并且 value 没有_isvue 属性
     shouldObserve &&
     !isServerRendering() &&
     (Array.isArray(value) || isPlainObject(value)) &&

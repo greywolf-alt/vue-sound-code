@@ -993,6 +993,7 @@
    * or the existing observer if the value already has one.
    */
   function observe(value, asRootData) {
+    // 如果传入的值不是一个对象 或者 对象继承自虚拟dom 直接return
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1616,11 +1617,6 @@
     propsData,
     vm
   ) {
-    console.log('key', key)
-    console.log('propOptions', propOptions)
-    console.log('propsData', propsData)
-    console.log('vm', vm)
-    console.log('--------------------')
     var prop = propOptions[key]
     var absent = !hasOwn(propsData, key)
     var value = propsData[key]

@@ -61,9 +61,13 @@ export function validateProp(
     value = getPropDefaultValue(vm, prop, key)
     // since the default value is a fresh copy,
     // make sure to observe it.
+    // shouldObserve 全局状态下的变量 应该监听? 
     const prevShouldObserve = shouldObserve
+    // 这是为true 就是监听状态
     toggleObserving(true)
+    // 
     observe(value)
+    // 返回之间的监听状态
     toggleObserving(prevShouldObserve)
   }
   if (
@@ -89,6 +93,7 @@ function getPropDefaultValue(vm: ?Component, prop: PropOptions, key: string): an
   // 拿到提供的dafault 函数
   const def = prop.default
   // warn against non-factory defaults for Object & Array
+  // 值不可以是 对象或者数组 需要return一个对象或者数组
   if (process.env.NODE_ENV !== 'production' && isObject(def)) {
     warn(
       'Invalid default value for prop "' + key + '": ' +
