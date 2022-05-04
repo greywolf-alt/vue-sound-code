@@ -1637,7 +1637,6 @@
     // check default value
     if (value === undefined) {
       value = getPropDefaultValue(vm, prop, key)
-      console.log('value', value)
       // since the default value is a fresh copy,
       // make sure to observe it.
       var prevShouldObserve = shouldObserve
