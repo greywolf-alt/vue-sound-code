@@ -1623,7 +1623,6 @@
     console.log('--------------------')
     var prop = propOptions[key]
     var absent = !hasOwn(propsData, key)
-    console.log('absent', absent)
     var value = propsData[key]
     // boolean casting
     var booleanIndex = getTypeIndex(Boolean, prop.type)
@@ -1642,6 +1641,7 @@
     // check default value
     if (value === undefined) {
       value = getPropDefaultValue(vm, prop, key)
+      console.log('value', value)
       // since the default value is a fresh copy,
       // make sure to observe it.
       var prevShouldObserve = shouldObserve

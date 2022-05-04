@@ -57,6 +57,7 @@ export function validateProp(
   // check default value
   // 如果value ==== undefined
   if (value === undefined) {
+    // { type: null } 的格式
     value = getPropDefaultValue(vm, prop, key)
     // since the default value is a fresh copy,
     // make sure to observe it.
@@ -78,11 +79,14 @@ export function validateProp(
 /**
  * Get the default value of a prop.
  */
+// 在validateProps 的时候 如果 获取到的值=== undefined  就会子组件props定义的default 的值 
 function getPropDefaultValue(vm: ?Component, prop: PropOptions, key: string): any {
   // no default, return undefined
+  // 没有提供default 就 === undefined
   if (!hasOwn(prop, 'default')) {
     return undefined
   }
+  // 拿到提供的dafault 函数
   const def = prop.default
   // warn against non-factory defaults for Object & Array
   if (process.env.NODE_ENV !== 'production' && isObject(def)) {
