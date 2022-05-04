@@ -130,6 +130,7 @@ export function observe(value: any, asRootData: ?boolean): Observer | void {
   ) {
     ob = new Observer(value)
   }
+  // 如果是根节点并且观察者注册成功 vmcount自增1
   if (asRootData && ob) {
     ob.vmCount++
   }
@@ -186,6 +187,7 @@ export function defineReactive(
         return
       }
       /* eslint-enable no-self-compare */
+      // 报错的时候的提示
       if (process.env.NODE_ENV !== 'production' && customSetter) {
         customSetter()
       }

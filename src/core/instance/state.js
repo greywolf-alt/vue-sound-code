@@ -72,10 +72,12 @@ function initProps(vm: Component, propsOptions: Object) {
   // propsoptions 我们传递过来的props  但是是经过初始化的的  都会变成 { item:{ type } } 的形式 
   for (const key in propsOptions) {
     keys.push(key) // [ item ]
+    // validateprop 函数就是验证prop的类型 和默认值的配置 并且讲prop 设置 在观察者里面
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       const hyphenatedKey = hyphenate(key)
+      // 如果是vue的内置属性 example key,ref,slot,slot-scope,is
       if (isReservedAttribute(hyphenatedKey) ||
         config.isReservedAttr(hyphenatedKey)) {
         warn(
@@ -83,6 +85,7 @@ function initProps(vm: Component, propsOptions: Object) {
           vm
         )
       }
+      // 定义一个响应式的属性就是设置 getter和setter 属性
       defineReactive(props, key, value, () => {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
@@ -101,6 +104,7 @@ function initProps(vm: Component, propsOptions: Object) {
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
     if (!(key in vm)) {
+      // 访问vm属性的时候  其实访问的是_props
       proxy(vm, `_props`, key)
     }
   }
