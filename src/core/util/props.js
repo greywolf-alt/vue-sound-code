@@ -16,22 +16,35 @@ type PropOptions = {
   default: any,
   required: ?boolean,
   validator: ?Function
-};
-
-export function validateProp (
-  key: string,
-  propOptions: Object,
-  propsData: Object,
-  vm?: Component
+}
+// 这是一个循环调用的场景
+export function validateProp(
+  key: string, // props 接受的每一个成员 [ item ] 
+  propOptions: Object, // 子组件定义 props 的配置 经过normal转换的 { item:{type} } 的形式
+  propsData: Object, // 传递过来的值 { key:value } 的形式 
+  vm?: Component // VueComponent 组件实例
 ): any {
-  const prop = propOptions[key]
-  const absent = !hasOwn(propsData, key)
-  let value = propsData[key]
-  // boolean casting
+  /**
+   * Example  
+   * key: message
+   * propOptions: { message: { type:null } }
+   * propsData : { message:'hellow Vue'  }
+   */
+  const prop = propOptions[key]  // { type: null } 
+  const absent = !hasOwn(propsData, key)  // hasOwn 包含某个属性 notice: 有个取反的操作
+  let value = propsData[key] //  从propsData获取值
+  // boolean casting 
+  // 就是判断两个类型是否相等  相等就返回0 否则的话就返回-1 
+  //  prop.type 支持 传递一个数组 如果是数组就会遍历里面的类型
   const booleanIndex = getTypeIndex(Boolean, prop.type)
+  // 如果 类型匹配
   if (booleanIndex > -1) {
+    // 如果不包含某个属性 并且 没有设置默认值
     if (absent && !hasOwn(prop, 'default')) {
+      // 那么value === false
       value = false
+      // key === message
+      // 如果 value === ''
     } else if (value === '' || value === hyphenate(key)) {
       // only cast empty string / same name to boolean if
       // boolean has higher priority
@@ -42,6 +55,7 @@ export function validateProp (
     }
   }
   // check default value
+  // 如果value ==== undefined
   if (value === undefined) {
     value = getPropDefaultValue(vm, prop, key)
     // since the default value is a fresh copy,
@@ -64,7 +78,7 @@ export function validateProp (
 /**
  * Get the default value of a prop.
  */
-function getPropDefaultValue (vm: ?Component, prop: PropOptions, key: string): any {
+function getPropDefaultValue(vm: ?Component, prop: PropOptions, key: string): any {
   // no default, return undefined
   if (!hasOwn(prop, 'default')) {
     return undefined
@@ -97,7 +111,7 @@ function getPropDefaultValue (vm: ?Component, prop: PropOptions, key: string): a
 /**
  * Assert whether a prop is valid.
  */
-function assertProp (
+function assertProp(
   prop: PropOptions,
   name: string,
   value: any,
@@ -149,9 +163,9 @@ function assertProp (
 
 const simpleCheckRE = /^(String|Number|Boolean|Function|Symbol)$/
 
-function assertType (value: any, type: Function): {
-  valid: boolean;
-  expectedType: string;
+function assertType(value: any, type: Function): {
+  valid: boolean
+  expectedType: string
 } {
   let valid
   const expectedType = getType(type)
@@ -180,19 +194,32 @@ function assertType (value: any, type: Function): {
  * because a simple equality check will fail when running
  * across different vms / iframes.
  */
-function getType (fn) {
+// 获取参数的 类型
+function getType(fn) {
+  // 转换为false的 都会返回 空字符串  其他的都会调用tostring().match(..) 变成 [ function Boolean ] 的形式
   const match = fn && fn.toString().match(/^\s*function (\w+)/)
   return match ? match[1] : ''
 }
 
-function isSameType (a, b) {
+function isSameType(a, b) {
+  // 就是判断两个参数是否全等  使用 toString 方法
   return getType(a) === getType(b)
 }
-
-function getTypeIndex (type, expectedTypes): number {
+// 获取类型索引?
+// 
+function getTypeIndex(type, expectedTypes): number {
+  // 首先判断传递过来的参数是不是一个数组
+  /**
+   * Example
+   *  在validateProps 中传递过来的是Boolean,null
+   */
+  // 如果不是数组就执行下面的操作
   if (!Array.isArray(expectedTypes)) {
+    // ( null,Boolean) 
+    // 相等就返回 0 否则的就返回 -1
     return isSameType(expectedTypes, type) ? 0 : -1
   }
+  // 如果传递过来的是数组<prop.type = []> 就会遍历这个数组 如果 类型相等 就返回对应的类型索引
   for (let i = 0, len = expectedTypes.length; i < len; i++) {
     if (isSameType(expectedTypes[i], type)) {
       return i

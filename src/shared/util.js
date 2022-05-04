@@ -137,6 +137,7 @@ export function remove (arr: Array<any>, item: any): Array<any> | void {
 /**
  * Check whether the object has the property.
  */
+// 就是  是否包含某个属性
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj: Object | Array<*>, key: string): boolean {
   return hasOwnProperty.call(obj, key)
@@ -174,6 +175,7 @@ export const capitalize = cached((str: string): string => {
  * Hyphenate a camelCase string.
  */
 const hyphenateRE = /\B([A-Z])/g
+// str === message
 export const hyphenate = cached((str: string): string => {
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 })

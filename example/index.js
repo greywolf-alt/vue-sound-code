@@ -1616,8 +1616,14 @@
     propsData,
     vm
   ) {
+    console.log('key', key)
+    console.log('propOptions', propOptions)
+    console.log('propsData', propsData)
+    console.log('vm', vm)
+    console.log('--------------------')
     var prop = propOptions[key]
     var absent = !hasOwn(propsData, key)
+    console.log('absent', absent)
     var value = propsData[key]
     // boolean casting
     var booleanIndex = getTypeIndex(Boolean, prop.type)
@@ -4690,7 +4696,6 @@
       toggleObserving(false)
     }
     var loop = function (key) {
-      console.log(key)
       keys.push(key)
       var value = validateProp(key, propsOptions, propsData, vm)
       /* istanbul ignore else */
@@ -4722,7 +4727,6 @@
         proxy(vm, "_props", key)
       }
     }
-    console.log(propsOptions)
     for (var key in propsOptions) loop(key)
     toggleObserving(true)
   }
