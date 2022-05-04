@@ -40,7 +40,8 @@ export function initState(vm: Component) {
   // _Watcheer 初始化为一个空数组
   vm._watchers = []
   const opts = vm.$options
-  if (opts.props) initProps(vm, opts.props)
+  if (opts.props) initProps(vm, opts.props) //  其实就是props 验证和设置了默认值 并且对props 上面的属性添加了观察者
+   // initmethods 比较简单就是检查重复的key<和props重复> 然后将mehtods.key设置到vm上,并且绑定this===vm
   if (opts.methods) initMethods(vm, opts.methods)
   if (opts.data) {
     initData(vm)
@@ -266,11 +267,12 @@ function createComputedGetter(key) {
     }
   }
 }
-
+// initstate 的时候进行了 事件初始化
 function initMethods(vm: Component, methods: Object) {
   const props = vm.$options.props
   for (const key in methods) {
     if (process.env.NODE_ENV !== 'production') {
+      // 如果methods.key === null
       if (methods[key] == null) {
         warn(
           `Method "${key}" has an undefined value in the component definition. ` +
@@ -278,12 +280,14 @@ function initMethods(vm: Component, methods: Object) {
           vm
         )
       }
+      // 如果methods的key已经在props里面存在了
       if (props && hasOwn(props, key)) {
         warn(
           `Method "${key}" has already been defined as a prop.`,
           vm
         )
       }
+      // 
       if ((key in vm) && isReserved(key)) {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
@@ -291,6 +295,7 @@ function initMethods(vm: Component, methods: Object) {
         )
       }
     }
+    // 将methods里面的成员设置到vm上面并且绑定this
     vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
   }
 }
