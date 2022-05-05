@@ -186,23 +186,26 @@ export function getData(data: Function, vm: Component): any {
 }
 
 const computedWatcherOptions = { lazy: true }
-
+// initstate 的时候初始化 computed
 function initComputed(vm: Component, computed: Object) {
   // $flow-disable-line
+  // 初始化一个空对象
   const watchers = vm._computedWatchers = Object.create(null)
   // computed properties are just getters during SSR
-  const isSSR = isServerRendering()
+  const isSSR = isServerRendering() // 服务端渲染
 
   for (const key in computed) {
-    const userDef = computed[key]
+    const userDef = computed[key] // 计算属性的每一个成员
+    // 如果计算属性是一个函数的话 那就是 成员本身 如果是一个对象那么就获取他的get属性
     const getter = typeof userDef === 'function' ? userDef : userDef.get
+    // 对象情况下  get属性是必须的
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
         `Getter is missing for computed property "${key}".`,
         vm
       )
     }
-
+    //  不是服务端渲染
     if (!isSSR) {
       // create internal watcher for the computed property.
       watchers[key] = new Watcher(
@@ -219,8 +222,10 @@ function initComputed(vm: Component, computed: Object) {
     if (!(key in vm)) {
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {
+      // 如果计算属性的key 存在data中
       if (key in vm.$data) {
         warn(`The computed property "${key}" is already defined in data.`, vm)
+        // 如果计算属性的key 存在props属性中
       } else if (vm.$options.props && key in vm.$options.props) {
         warn(`The computed property "${key}" is already defined as a prop.`, vm)
       }

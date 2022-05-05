@@ -4482,9 +4482,9 @@
     this.newDepIds = new _Set()
     this.expression = expOrFn.toString()
     // parse expression for getter
-    if (typeof expOrFn === 'function') {
+    if (typeof expOrFn === 'function') { 
       this.getter = expOrFn
-    } else {
+    } else { 
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
@@ -4741,7 +4741,6 @@
     }
     // proxy data on instance
     var keys = Object.keys(data)
-    console.log('keys',keys)
     var props = vm.$options.props
     var methods = vm.$options.methods
     var i = keys.length
@@ -4785,8 +4784,11 @@
   var computedWatcherOptions = { lazy: true }
 
   function initComputed(vm, computed) {
+    console.log('computed', computed)
     // $flow-disable-line
+    // 空对象
     var watchers = vm._computedWatchers = Object.create(null)
+    console.log('watchers', watchers)
     // computed properties are just getters during SSR
     var isSSR = isServerRendering()
 

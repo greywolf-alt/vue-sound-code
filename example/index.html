@@ -18,20 +18,29 @@
           time: new Date()
         }
       },
-      props: ['message'],
+      props: ['message', 'count'],
       inject: ['provideName'],
-      template: `<span>{{time}} <br/> provideName:{{provideName}}</span>`,
+      computed: {
+        handleTime: {
+          get() {
+            const { count } = this
+            return '你点击了我' + count + '次'
+          }
+        }
+      },
+      template: `<span> {{time}}  <br/> {{handleTime}} <br/> provideName:{{provideName}}</span>`,
       mounted() {
-        // console.log('current-time', this)
+        console.log('current-time', this)
       },
     })
     var app = new Vue({
       el: '#app',
       template: `
-      <div class="hello" @click="click">
-        <span>{{message}} <span v-if="count" >你点击了我{{count}}次</span> </span>
-        <current-time :message="message" ></current-time>
-      </div>
+        <div class="hello" @click="click">
+          <span>{{message}}</span>
+          <br />
+          <current-time :message="message" :count="count" ></current-time>
+        </div>
       `,
       provide: {
         provideName: 'zs'
