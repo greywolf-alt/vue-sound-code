@@ -42,10 +42,11 @@ export function initState(vm: Component) {
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props) //  其实就是props 验证和设置了默认值 并且对props 上面的属性添加了观察者
    // initmethods 比较简单就是检查重复的key<和props重复> 然后将mehtods.key设置到vm上,并且绑定this===vm
-  if (opts.methods) initMethods(vm, opts.methods)
+  if (opts.methods) initMethods(vm, opts.methods) //改变this的方法 fn.bind(ctx)
   if (opts.data) {
-    initData(vm)
+    initData(vm) // 就是初始化data选项  并且data.key不能以_或者$符号开头,不能和peops 和methods 重名 然后将data列入观察者
   } else {
+    // 如果没有给data选项 那么就默认一个 空对象
     observe(vm._data = {}, true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
@@ -111,12 +112,14 @@ function initProps(vm: Component, propsOptions: Object) {
   }
   toggleObserving(true)
 }
-
+// 在initstate的时候 初始化  data
 function initData(vm: Component) {
+  // 获取 data
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
+    ? getData(data, vm) // 就是执行了一个call操作
     : data || {}
+    // 获取数据类型.toString === [object object]
   if (!isPlainObject(data)) {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
@@ -126,13 +129,14 @@ function initData(vm: Component) {
     )
   }
   // proxy data on instance
-  const keys = Object.keys(data)
-  const props = vm.$options.props
-  const methods = vm.$options.methods
+  const keys = Object.keys(data) // 数组key
+  const props = vm.$options.props // 获取props item
+  const methods = vm.$options.methods // 获取 methods item
   let i = keys.length
   while (i--) {
     const key = keys[i]
     if (process.env.NODE_ENV !== 'production') {
+      // key 在methods 中已经存在了
       if (methods && hasOwn(methods, key)) {
         warn(
           `Method "${key}" has already been defined as a data property.`,
@@ -140,17 +144,21 @@ function initData(vm: Component) {
         )
       }
     }
+    //data.key 已经在props 中存在了
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
+      // 判断key 是不是已 $ 或者_ 开头
     } else if (!isReserved(key)) {
+      // 代理 key
       proxy(vm, `_data`, key)
     }
   }
   // observe data
+  // 观察 data
   observe(data, true /* asRootData */)
 }
 
@@ -163,7 +171,7 @@ export function proxy(target: Object, sourceKey: string, key: string) {
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-
+// initdata 函数里面 当 typeof data === 'function' 的时候  会调用getdata
 export function getData(data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()

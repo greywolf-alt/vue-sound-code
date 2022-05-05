@@ -4741,6 +4741,7 @@
     }
     // proxy data on instance
     var keys = Object.keys(data)
+    console.log('keys',keys)
     var props = vm.$options.props
     var methods = vm.$options.methods
     var i = keys.length
