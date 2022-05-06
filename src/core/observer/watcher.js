@@ -111,6 +111,7 @@ export default class Watcher {
     let value
     const vm = this.vm
     try {
+      // 调用他的getter
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
@@ -121,10 +122,13 @@ export default class Watcher {
     } finally {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
+      // 深度监听
       if (this.deep) {
+        // 其实就是 给 value 的每一个属性id 添加到 seenObjects set数据里面 
         traverse(value)
       }
       popTarget()
+      // 清空
       this.cleanupDeps()
     }
     return value
