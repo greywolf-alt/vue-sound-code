@@ -4482,9 +4482,9 @@
     this.newDepIds = new _Set()
     this.expression = expOrFn.toString()
     // parse expression for getter
-    if (typeof expOrFn === 'function') { 
+    if (typeof expOrFn === 'function') {
       this.getter = expOrFn
-    } else { 
+    } else {
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
@@ -4783,12 +4783,10 @@
 
   var computedWatcherOptions = { lazy: true }
 
-  function initComputed(vm, computed) {
-    console.log('computed', computed)
+  function initComputed(vm, computed) { 
     // $flow-disable-line
     // 空对象
-    var watchers = vm._computedWatchers = Object.create(null)
-    console.log('watchers', watchers)
+    var watchers = vm._computedWatchers = Object.create(null) 
     // computed properties are just getters during SSR
     var isSSR = isServerRendering()
 
@@ -4834,6 +4832,9 @@
     key,
     userDef
   ) {
+    console.log('target', target)
+    console.log('key', key)
+    console.log('userDef', userDef)
     var shouldCache = !isServerRendering()
     if (typeof userDef === 'function') {
       sharedPropertyDefinition.get = shouldCache

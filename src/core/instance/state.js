@@ -208,6 +208,7 @@ function initComputed(vm: Component, computed: Object) {
     //  不是服务端渲染
     if (!isSSR) {
       // create internal watcher for the computed property.
+      // 这个就是监听了 数据的每一个成员 但是并没有计算啊
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -219,6 +220,7 @@ function initComputed(vm: Component, computed: Object) {
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
+    // vue实例中没有 这个key
     if (!(key in vm)) {
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {
@@ -232,17 +234,20 @@ function initComputed(vm: Component, computed: Object) {
     }
   }
 }
-
+// 定义computed
 export function defineComputed(
   target: any,
   key: string,
   userDef: Object | Function
 ) {
-  const shouldCache = !isServerRendering()
+  const shouldCache = !isServerRendering() //  服务端喧染
+  //  这个userDef 是被initComputed转换过的 是一个使用get方法定义的 也是一个函数
   if (typeof userDef === 'function') {
+    // 设置 getter
     sharedPropertyDefinition.get = shouldCache
       ? createComputedGetter(key)
       : userDef
+    // 计算属性没有set
     sharedPropertyDefinition.set = noop
   } else {
     sharedPropertyDefinition.get = userDef.get
@@ -256,6 +261,7 @@ export function defineComputed(
   }
   if (process.env.NODE_ENV !== 'production' &&
     sharedPropertyDefinition.set === noop) {
+      // 对计算属性赋值的时候报错
     sharedPropertyDefinition.set = function () {
       warn(
         `Computed property "${key}" was assigned to but it has no setter.`,
