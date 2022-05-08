@@ -49,6 +49,7 @@ export function initState(vm: Component) {
     // 如果没有给data选项 那么就默认一个 空对象
     observe(vm._data = {}, true /* asRootData */)
   }
+  // 设置计算属性. 没有完全理解
   if (opts.computed) initComputed(vm, opts.computed)
   if (opts.watch && opts.watch !== nativeWatch) {
     initWatch(vm, opts.watch)
@@ -271,7 +272,7 @@ export function defineComputed(
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-
+// 设置 computed 的getter 属性
 function createComputedGetter(key) {
   return function computedGetter() {
     const watcher = this._computedWatchers && this._computedWatchers[key]

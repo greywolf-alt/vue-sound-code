@@ -4783,10 +4783,10 @@
 
   var computedWatcherOptions = { lazy: true }
 
-  function initComputed(vm, computed) { 
+  function initComputed(vm, computed) {
     // $flow-disable-line
     // 空对象
-    var watchers = vm._computedWatchers = Object.create(null) 
+    var watchers = vm._computedWatchers = Object.create(null)
     // computed properties are just getters during SSR
     var isSSR = isServerRendering()
 
@@ -4832,9 +4832,6 @@
     key,
     userDef
   ) {
-    console.log('target', target)
-    console.log('key', key)
-    console.log('userDef', userDef)
     var shouldCache = !isServerRendering()
     if (typeof userDef === 'function') {
       sharedPropertyDefinition.get = shouldCache
@@ -4864,6 +4861,8 @@
     return function computedGetter() {
       var watcher = this._computedWatchers && this._computedWatchers[key]
       if (watcher) {
+        console.log('this', this)
+        console.log('watcher', watcher)
         if (watcher.dirty) {
           watcher.evaluate()
         }
