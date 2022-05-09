@@ -41,7 +41,7 @@ export function initState(vm: Component) {
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props) //  其实就是props 验证和设置了默认值 并且对props 上面的属性添加了观察者
-   // initmethods 比较简单就是检查重复的key<和props重复> 然后将mehtods.key设置到vm上,并且绑定this===vm
+  // initmethods 比较简单就是检查重复的key<和props重复> 然后将mehtods.key设置到vm上,并且绑定this===vm
   if (opts.methods) initMethods(vm, opts.methods) //改变this的方法 fn.bind(ctx)
   if (opts.data) {
     initData(vm) // 就是初始化data选项  并且data.key不能以_或者$符号开头,不能和peops 和methods 重名 然后将data列入观察者
@@ -120,7 +120,7 @@ function initData(vm: Component) {
   data = vm._data = typeof data === 'function'
     ? getData(data, vm) // 就是执行了一个call操作
     : data || {}
-    // 获取数据类型.toString === [object object]
+  // 获取数据类型.toString === [object object]
   if (!isPlainObject(data)) {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
@@ -262,7 +262,7 @@ export function defineComputed(
   }
   if (process.env.NODE_ENV !== 'production' &&
     sharedPropertyDefinition.set === noop) {
-      // 对计算属性赋值的时候报错
+    // 对计算属性赋值的时候报错
     sharedPropertyDefinition.set = function () {
       warn(
         `Computed property "${key}" was assigned to but it has no setter.`,
@@ -319,30 +319,37 @@ function initMethods(vm: Component, methods: Object) {
     vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
   }
 }
-
+// 初始化watch
 function initWatch(vm: Component, watch: Object) {
+  // 遍历传递选项
   for (const key in watch) {
     const handler = watch[key]
+    // 如果处理函数是一个数组 ==> 存在多个处理函数
     if (Array.isArray(handler)) {
       for (let i = 0; i < handler.length; i++) {
+        // 对每一个处理函数都调用 createwatcher
         createWatcher(vm, key, handler[i])
       }
     } else {
+      // 只有一个处理函数 
       createWatcher(vm, key, handler)
     }
   }
 }
 
+// initwatch 的时候 对监听函数的处理
 function createWatcher(
-  vm: Component,
-  expOrFn: string | Function,
-  handler: any,
+  vm: Component, // vue 实例
+  expOrFn: string | Function, //就是监听的每一个data.item
+  handler: any, // 处理函数 这个处理函数是经过initwatch 循环处理了的
   options?: Object
 ) {
+  // 如果处理函数是一个对象 obj.handle 就是watch 的监听函数
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler
   }
+  // 如果是一个string 那就是 vm.一个方法
   if (typeof handler === 'string') {
     handler = vm[handler]
   }

@@ -4861,8 +4861,6 @@
     return function computedGetter() {
       var watcher = this._computedWatchers && this._computedWatchers[key]
       if (watcher) {
-        console.log('this', this)
-        console.log('watcher', watcher)
         if (watcher.dirty) {
           watcher.evaluate()
         }
@@ -4922,11 +4920,16 @@
   }
 
   function createWatcher(
-    vm,
-    expOrFn,
-    handler,
-    options
+    vm, // vue 实例
+    expOrFn, //就是监听的每一个data.item
+    handler, // 处理函数 这个处理函数是经过initwatch 循环处理了的
+    options // 
   ) {
+    console.log('vm', vm)
+    console.log('expOrFn', expOrFn)
+    console.log('handler', handler)
+    console.log('options', options)
+    console.log('------------------------------')
     if (isPlainObject(handler)) {
       options = handler
       handler = handler.handler

@@ -54,6 +54,21 @@
         message: 'Hello Vue!',
         count: 0,
       },
+      watch: {
+        message: {
+          handle(val) {
+            console.log('更新的值', val)
+          }
+        },
+        count: [
+          function () {
+            console.log('我更新了1', this)
+          },
+          () => {
+            console.log('我更新了2')
+          }
+        ]
+      },
       methods: {
         click() {
           this.count++
